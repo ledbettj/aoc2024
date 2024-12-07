@@ -21,7 +21,7 @@ defmodule Day6 do
 
     res = p1_iterate(pos, dir, grid)
 
-    print(res)
+    # print(res)
 
     res
     |> Map.values()

@@ -22,6 +22,6 @@ defmodule Day6Test do
     {:ok, input} = File.read("./test/input/day6")
     {start, grid} = Day6.parse_input(input)
 
-    assert Day6.part1(start, grid) == 41
+    assert Day6.part1(start, grid) == 5095
   end
 end
