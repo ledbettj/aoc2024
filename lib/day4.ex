@@ -16,24 +16,40 @@ defmodule Day4 do
 
   def part1(grid) do
     grid
-    |> Enum.filter_map(fn
-      {pos, "X"} -> adjacent(grid, "M", pos)
-      _ -> nil
+    |> Enum.flat_map(fn
+      {pos, "X"} -> adjacent(grid, ["M", "A", "S"], pos)
+      _ -> []
     end)
-    |> Enum.flat_map(fn pos -> adjacent(grid, "A", pos) end)
-    |> Enum.flat_map(fn pos -> adjacent(grid, "S", pos) end)
-    |> Enum.reduce(&Kernel.+/2)
+    |> Enum.count()
   end
 
-  def adjacent(grid, target, {x, y}) do
-    Enum.map(-1..1, fn x_off ->
-      Enum.map(-1..1, fn y_off ->
+  def adjacent(grid, targets, {x, y}, {dx, dy}) do
+    [target | targets] = targets
+
+    pos = {x + dx, y + dy}
+
+    if Map.get(grid, pos) == target do
+      if Enum.empty?(targets) do
+        [1]
+      else
+        adjacent(grid, targets, pos, {dx, dy})
+      end
+    else
+      []
+    end
+  end
+
+  def adjacent(grid, targets, {x, y}) do
+    [target | targets] = targets
+
+    Enum.flat_map(-1..1, fn x_off ->
+      Enum.flat_map(-1..1, fn y_off ->
         pos = {x + x_off, y + y_off}
 
         if {x_off, y_off} != {0, 0} && Map.get(grid, pos) == target do
-          pos
+          adjacent(grid, targets, pos, {x_off, y_off})
         else
-          nil
+          []
         end
       end)
     end)
